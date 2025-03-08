@@ -1,21 +1,63 @@
 "use server";
 
-import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
-
-import registerUser from "@/server/registerUser";
-import getUser from "@/server/getUser";
+import { registerUser } from "@/services/auth";
+import BaseResponse from "@/types/BaseResponse";
+import { v4 as uuidv4 } from "uuid";
+import validateUser from "./utils";
+import User from "@/types/User";
 
 export async function POST(req: NextRequest) {
-  if (req.method === "POST") {
-    const user = await req.json();
+  const { email, password, first_name, last_name, phone_number } =
+    await req.json();
 
-    try {
-      const response = await registerUser({ user });
+  // Generate uuid for the user
+  const uuid = uuidv4();
 
-      return NextResponse.json(response);
-    } catch (error) {
-      return NextResponse.error();
-    }
+  // Create user object
+  const user: User = {
+    uuid: uuid,
+    email,
+    password,
+    first_name,
+    last_name,
+    phone_number,
+  };
+
+  // Validate user data
+  const isValid = validateUser(user);
+
+  if (isValid.error) {
+    return NextResponse.json({
+      status: 400,
+      message: "Missing data",
+      error: isValid.error,
+    } as BaseResponse);
   }
+
+  try {
+    const { error } = await registerUser({
+      req,
+      user,
+    });
+
+    if (error) {
+      return NextResponse.json({
+        status: 500,
+        message: "Error registering user",
+        error: error.message,
+      } as BaseResponse);
+    }
+  } catch (error) {
+    return NextResponse.json({
+      status: 500,
+      message: "Internal server error",
+      error: error,
+    } as BaseResponse);
+  }
+
+  return NextResponse.json({
+    status: 200,
+    message: "User registered successfully",
+  } as BaseResponse);
 }

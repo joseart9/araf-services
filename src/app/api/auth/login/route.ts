@@ -1,8 +1,9 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import getUser from "@/server/getUser";
+import BaseResponse from "@/types/BaseResponse";
 import jwt from "jsonwebtoken";
+import { getUser } from "@/services/auth";
 
 export async function POST(req: NextRequest) {
   const SECRET_KEY = process.env.JWT_SECRET;
@@ -23,10 +24,13 @@ export async function POST(req: NextRequest) {
 
   try {
     // Authenticate the user
-    const response = await getUser({ email, password });
+    const user = await getUser({ req, email, password });
 
-    if (response.status !== 200) {
-      return NextResponse.json(response, { status: response.status });
+    if (!user) {
+      return NextResponse.json({
+        status: 401,
+        message: "Invalid email or password",
+      } as BaseResponse);
     }
 
     // Generate a JWT token
@@ -34,13 +38,16 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       message: "Login successful",
-      token,
-      user: response.user,
-    });
+      data: {
+        token: token,
+        user: user,
+      },
+    } as BaseResponse);
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error", error: error },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      status: 500,
+      message: "Internal server error",
+      error: error,
+    } as BaseResponse);
   }
 }

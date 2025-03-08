@@ -1,13 +1,12 @@
 "use server";
 
-import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import { NextResponse, NextRequest } from "next/server";
+import { createClient } from "@/utils/supabase/middleware";
 import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";
 import BaseResponse from "@/types/BaseResponse";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     // Procesamos el formulario multipart/form-data
     const formData = await req.formData();
@@ -16,7 +15,7 @@ export async function POST(req: Request) {
     if (!file || !file.name) {
       return NextResponse.json({
         status: 400,
-        message: "No se encontró el archivo o el nombre del archivo.",
+        message: "No Auth token provided",
       } as BaseResponse);
     }
 
@@ -29,39 +28,37 @@ export async function POST(req: Request) {
     try {
       processedBuffer = await sharp(buffer)
         .resize({ width: 1024 }) // Redimensiona a un ancho máximo de 1024px
-        .webp({ quality: 80 }) // Convierte a WEBP con calidad 80 (puedes ajustar según convenga)
+        .jpeg({ quality: 80 }) // Convierte a JPEG con calidad 80 (puedes ajustar según convenga)
         .toBuffer();
     } catch (err) {
-      console.error("Error durante la compresión:", err);
+      console.error("Error during compression:", err);
       // Si falla la compresión, se usa el buffer original
       processedBuffer = buffer;
     }
 
     // Generamos un nombre único para la imagen
     const imageID = uuidv4();
-    const fileExtension = "webp";
+    const fileExtension = "jpeg";
     const uniqueFileName = `${imageID}.${fileExtension}`;
 
     // Si se envía el nombre de una carpeta en el formulario, lo usamos; de lo contrario se usa la raíz
     const folder = (formData.get("projectID") as string) || "";
     const path = folder ? `${folder}/${uniqueFileName}` : uniqueFileName;
 
-    // Conexión a Supabase utilizando las cookies
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    // Conexión a Supabase
+    const db = createClient(req);
 
     // Subimos la imagen procesada al bucket "images"
-    const { data, error } = await supabase.storage
+    const { data, error } = await db.storage
       .from("images")
       .upload(path, processedBuffer, {
         contentType: file.type,
       });
 
     if (error) {
-      console.error("Error al subir imagen:", error);
       return NextResponse.json({
         status: 500,
-        message: "Error al subir imagen",
+        message: "Error uploading image",
         error: error.message,
       } as BaseResponse);
     }
@@ -71,14 +68,14 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       status: 200,
-      message: "Imagen subida correctamente",
+      message: "Image uploaded successfully",
       data: { url: imageUrl, fileName: uniqueFileName, imageID: imageID },
     } as BaseResponse);
   } catch (error: any) {
     console.error("Error en la API:", error);
     return NextResponse.json({
       status: 500,
-      message: "Error en el servidor",
+      message: "Internal server error",
       error: error.message || error,
     } as BaseResponse);
   }
