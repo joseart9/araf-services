@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/middleware";
 import { NextRequest } from "next/server";
 import bcrypt from "bcrypt";
 import User from "@/types/User";
+import UserSession from "@/types/UserSession";
 
 interface BaseProps {
   req: NextRequest;
@@ -92,7 +93,7 @@ export async function isUserRegistered(
   db: any,
   email: string
 ): Promise<boolean> {
-  //Check if the user is already registered
+  // Check if the user is already registered
   const { data, error } = await db.from("users").select().eq("email", email);
 
   if (error) {
@@ -100,4 +101,37 @@ export async function isUserRegistered(
   }
 
   return data.length > 0;
+}
+
+interface GetUserSessionProps extends BaseProps {
+  user: User;
+}
+
+// Function to get the User Session
+export async function getUserSession({
+  user,
+  req,
+}: GetUserSessionProps): Promise<null | UserSession> {
+  // Connect to the db
+  const db = createClient(req);
+
+  // Fetch user based on the uuid
+  const { data, error } = await db
+    .from("users")
+    .select("*")
+    .eq("uuid", user.uuid)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  // Return the user session
+  return {
+    userID: data[0].id,
+    email: data[0].email,
+    uuid: data[0].uuid,
+    role: data[0].role,
+    organizationID: data[0].organization_id,
+  };
 }

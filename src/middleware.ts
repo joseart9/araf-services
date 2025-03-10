@@ -33,8 +33,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // Validar token
-  const isValid = await validateToken(token);
-  console.log("isValid", isValid);
+  const { valid: isValid, payload } = await validateToken(token);
+
+  console.log(isValid);
 
   if (!isValid) {
     return NextResponse.json({

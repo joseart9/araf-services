@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
 
 // Create a new organization
+// api/organization
 export async function POST(req: NextRequest) {
   // Get cookies from the request
   const cookieStore = cookies();

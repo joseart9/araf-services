@@ -6,6 +6,7 @@ import BaseResponse from "@/types/BaseResponse";
 import { v4 as uuidv4 } from "uuid";
 import validateUser from "./utils";
 import User from "@/types/User";
+import { ROLES } from "@/const/roles";
 
 export async function POST(req: NextRequest) {
   const { email, password, first_name, last_name, phone_number } =
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
     first_name,
     last_name,
     phone_number,
+    role: ROLES.USER,
   };
 
   // Validate user data
