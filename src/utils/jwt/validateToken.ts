@@ -11,6 +11,6 @@ export async function validateToken(
     }
     return { payload, status: 200 };
   } catch (error) {
-    return { status: 403, error: "Invalid token" };
+    return { status: 403, error: "Invalid token or expired token" };
   }
 }

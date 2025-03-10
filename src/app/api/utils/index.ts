@@ -1,10 +1,10 @@
 import UserSession from "@/types/UserSession";
-import { JWTPayload, jwtVerify } from "jose";
+import { jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 
-export async function getUser(
+export async function getUserSession(
   req: NextRequest
-): Promise<{ user?: null | UserSession; error?: string }> {
+): Promise<{ user?: UserSession; error?: string }> {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader ? authHeader.split(" ")[1] : undefined;
   const secret = new TextEncoder().encode(process.env.JWT_SECRET || "");
