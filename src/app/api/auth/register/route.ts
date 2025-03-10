@@ -9,8 +9,14 @@ import User from "@/types/User";
 import { ROLES } from "@/const/roles";
 
 export async function POST(req: NextRequest) {
-  const { email, password, first_name, last_name, phone_number } =
-    await req.json();
+  const {
+    email,
+    password,
+    first_name,
+    last_name,
+    phone_number,
+    organization_id,
+  } = await req.json();
 
   // Generate uuid for the user
   const uuid = uuidv4();
@@ -24,17 +30,19 @@ export async function POST(req: NextRequest) {
     last_name,
     phone_number,
     role: ROLES.USER,
+    organization_id: organization_id,
   };
 
   // Validate user data
   const isValid = validateUser(user);
 
   if (isValid.error) {
-    return NextResponse.json({
-      status: 400,
-      message: "Missing data",
-      error: isValid.error,
-    } as BaseResponse);
+    return NextResponse.json(
+      {
+        message: isValid.error,
+      },
+      { status: 400 }
+    );
   }
 
   try {
@@ -44,22 +52,26 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) {
-      return NextResponse.json({
-        status: 500,
-        message: "Error registering user",
-        error: error.message,
-      } as BaseResponse);
+      return NextResponse.json(
+        {
+          message: error,
+        } as BaseResponse,
+        { status: 400 }
+      );
     }
   } catch (error) {
-    return NextResponse.json({
-      status: 500,
-      message: "Internal server error",
-      error: error,
-    } as BaseResponse);
+    return NextResponse.json(
+      {
+        message: error,
+      } as BaseResponse,
+      { status: 500 }
+    );
   }
 
-  return NextResponse.json({
-    status: 200,
-    message: "User registered successfully",
-  } as BaseResponse);
+  return NextResponse.json(
+    {
+      message: "User registered successfully",
+    } as BaseResponse,
+    { status: 200 }
+  );
 }

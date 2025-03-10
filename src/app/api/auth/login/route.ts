@@ -18,28 +18,33 @@ export async function POST(req: NextRequest) {
 
   if (!email || !password) {
     return NextResponse.json(
-      { message: "Email and password are required" },
+      {
+        message: "Email and password are required",
+      } as BaseResponse,
       { status: 400 }
     );
   }
 
   try {
     // Authenticate the user
-    const { user, error } = await getUser({ req, email, password });
-
-    if (!user) {
-      return NextResponse.json({
-        status: 401,
-        message: "Invalid email or password",
-      } as BaseResponse);
-    }
+    const { user, error, status } = await getUser({ req, email, password });
 
     if (error) {
-      return NextResponse.json({
-        status: 500,
-        message: "Internal server error",
-        error: error,
-      } as BaseResponse);
+      return NextResponse.json(
+        {
+          message: error,
+        } as BaseResponse,
+        { status: status }
+      );
+    }
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          message: "Invalid email or password",
+        } as BaseResponse,
+        { status: status }
+      );
     }
 
     // Create a user session for JWT
@@ -54,18 +59,21 @@ export async function POST(req: NextRequest) {
     // Generate a JWT token
     const token = jwt.sign({ ...userSession }, SECRET_KEY, { expiresIn: "1h" });
 
-    return NextResponse.json({
-      status: 200,
-      message: "Login successful",
-      data: {
-        token: token,
-      },
-    } as BaseResponse);
+    return NextResponse.json(
+      {
+        message: "Login successful",
+        data: {
+          token,
+        },
+      } as BaseResponse,
+      { status: status }
+    );
   } catch (error) {
-    return NextResponse.json({
-      status: 500,
-      message: "Internal server error",
-      error: error,
-    } as BaseResponse);
+    return NextResponse.json(
+      {
+        message: error,
+      } as BaseResponse,
+      { status: 500 }
+    );
   }
 }

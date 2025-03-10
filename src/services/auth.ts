@@ -1,30 +1,32 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/middleware";
-import { NextRequest } from "next/server";
 import bcrypt from "bcrypt";
 import User from "@/types/User";
 import UserSession from "@/types/UserSession";
+import BaseRequest from "@/types/BaseRequest";
 
-interface BaseProps {
-  req: NextRequest;
-}
-
-interface RegisterUserProps extends BaseProps {
+interface RegisterUserProps extends BaseRequest {
   user: User;
 }
 
-export async function registerUser({ req, user }: RegisterUserProps) {
+export async function registerUser({
+  req,
+  user,
+}: RegisterUserProps): Promise<{ error?: string; data?: any; status: number }> {
   // Create db connection
   const db = createClient(req);
 
   // Check if the user is already registered
-  const isRegistered = await isUserRegistered(db, user.email);
+  const { isRegistered, error: isRegisteredError } = await isUserRegistered(
+    db,
+    user.email
+  );
+
+  console.log(isRegistered, isRegisteredError);
 
   if (isRegistered) {
-    return {
-      error: new Error("User is already registered"),
-    };
+    return { error: "This user already has an account", status: 400 };
   }
 
   // Hash password
@@ -39,13 +41,21 @@ export async function registerUser({ req, user }: RegisterUserProps) {
       last_name: user.last_name,
       phone_number: user.phone_number,
       uuid: user.uuid,
+      organization_id: user.organization_id,
     },
   ]);
 
-  return { data, error };
+  if (error) {
+    return {
+      error: error.message,
+      status: 400,
+    };
+  }
+
+  return { data, status: 200 };
 }
 
-interface GetUserProps extends BaseProps {
+interface GetUserProps extends BaseRequest {
   email: string;
   password: string;
 }
@@ -54,56 +64,65 @@ export async function getUser({
   req,
   email,
   password,
-}: GetUserProps): Promise<{ user?: User; error?: Error }> {
+}: GetUserProps): Promise<{ user?: User; error?: string; status?: number }> {
   // Create db connection
   const db = createClient(req);
 
   // Get user from db
-  const { data, error } = await db.from("users").select().eq("email", email);
-
-  if (error) {
-    return {
-      error,
-    };
-  }
+  const { data, error } = await db
+    .from("users")
+    .select()
+    .eq("email", email)
+    .single();
 
   // Check if the user exists
   if (!data) {
     return {
-      error: new Error("User not found"),
+      error: "User not found",
+      status: 404,
     };
   }
 
-  const user = data[0];
+  if (error) {
+    return {
+      error: error.message,
+      status: 400,
+    };
+  }
+
+  const user = data;
 
   // Check if the password is correct
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
   if (!isPasswordCorrect) {
     return {
-      error: new Error("Incorrect password"),
+      error: "Incorrect password",
+      status: 401,
     };
   }
 
-  return { user };
+  return { user, status: 200 };
 }
 
 // Function to check if the user is already registered
 export async function isUserRegistered(
   db: any,
   email: string
-): Promise<boolean> {
+): Promise<{ isRegistered?: boolean; error?: string }> {
   // Check if the user is already registered
   const { data, error } = await db.from("users").select().eq("email", email);
 
   if (error) {
-    throw new Error("Error checking if user is already registered");
+    return { error: error.message, isRegistered: true };
   }
 
-  return data.length > 0;
+  if (data.length > 0) {
+    return { isRegistered: true };
+  } else return { isRegistered: false };
 }
 
-interface GetUserSessionProps extends BaseProps {
+interface GetUserSessionProps extends BaseRequest {
   user: User;
 }
 
@@ -111,7 +130,10 @@ interface GetUserSessionProps extends BaseProps {
 export async function getUserSession({
   user,
   req,
-}: GetUserSessionProps): Promise<null | UserSession> {
+}: GetUserSessionProps): Promise<{
+  userSession: null | UserSession;
+  error?: string;
+}> {
   // Connect to the db
   const db = createClient(req);
 
@@ -123,15 +145,17 @@ export async function getUserSession({
     .single();
 
   if (error || !data) {
-    return null;
+    return { error: error?.message || "User not found", userSession: null };
   }
 
   // Return the user session
   return {
-    userID: data[0].id,
-    email: data[0].email,
-    uuid: data[0].uuid,
-    role: data[0].role,
-    organizationID: data[0].organization_id,
+    userSession: {
+      userID: data.id,
+      email: data.email,
+      uuid: data.uuid,
+      role: data.role,
+      organizationID: data.organization_id,
+    },
   };
 }

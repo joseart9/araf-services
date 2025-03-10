@@ -2,19 +2,21 @@ import UserSession from "@/types/UserSession";
 import { JWTPayload, jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 
-export async function getUser(req: NextRequest): Promise<null | UserSession> {
+export async function getUser(
+  req: NextRequest
+): Promise<{ user?: null | UserSession; error?: string }> {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader ? authHeader.split(" ")[1] : undefined;
   const secret = new TextEncoder().encode(process.env.JWT_SECRET || "");
 
-  if (!token) {
-    return null;
+  if (!token || !authHeader) {
+    return { error: "No Auth token provided" };
   }
 
   try {
     const { payload } = await jwtVerify(token, secret);
-    return payload as unknown as UserSession;
+    return { user: payload as unknown as UserSession };
   } catch (error) {
-    return null;
+    return { error: error instanceof Error ? error.message : "Unknown error" };
   }
 }

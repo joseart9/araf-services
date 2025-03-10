@@ -1,50 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import BaseResponse from "@/types/BaseResponse";
-import getSupabaseClient from "@/utils/supabase";
-import { cookies } from "next/headers";
-import { v4 as uuidv4 } from "uuid";
+import { createOrganization } from "@/services";
 
 // Create a new organization
 // api/organization
 export async function POST(req: NextRequest) {
-  // Get cookies from the request
-  const cookieStore = cookies();
-
   // Get the request body
   const { name } = await req.json();
 
   // Check if the name is provided
   if (!name) {
-    return NextResponse.json({
-      status: 400,
-      message: "Name is required",
-    } as BaseResponse);
+    return NextResponse.json(
+      {
+        message: "A name for the organization is required",
+      } as BaseResponse,
+      { status: 400 }
+    );
   }
 
-  // Connect to Supabase
-  const db = getSupabaseClient(cookieStore);
-
-  // Generate a unique UUID for the organization
-  const uuid = uuidv4();
-
-  // Insert the new organization
-  const { data, error } = await db
-    .from("organizations")
-    .insert({ name, uuid })
-    .select("*")
-    .single();
+  // Create the organization
+  const { data, error, status } = await createOrganization(req, name);
 
   if (error) {
-    return NextResponse.json({
-      status: 500,
-      message: "Error creating organization",
-      error: error.message,
-    } as BaseResponse);
+    return NextResponse.json(
+      {
+        message: "Error creating organization",
+      } as BaseResponse,
+      { status: status }
+    );
   }
 
-  return NextResponse.json({
-    status: 200,
-    message: "Organization created successfully",
-    data,
-  } as BaseResponse);
+  return NextResponse.json(
+    {
+      message: "Organization created successfully",
+      data,
+    } as BaseResponse,
+    { status: status }
+  );
 }

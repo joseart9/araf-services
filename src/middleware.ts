@@ -15,33 +15,35 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const authHeader = request.headers.get("authorization");
   // Buscar token en cookies
-  let token = request.cookies.get("token")?.value;
-  // Si no se encuentra en cookies, buscar en header Authorization
-  if (!token) {
-    const authHeader = request.headers.get("authorization");
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      token = authHeader.substring(7);
-    }
-  }
+  let token = authHeader?.substring(7);
+
+  console.log(token);
 
   if (!token) {
-    return NextResponse.json({
-      status: 403,
-      message: "No Auth token provided",
-    } as BaseResponse);
+    return NextResponse.json(
+      {
+        message: "No Auth token provided",
+      } as BaseResponse,
+      {
+        status: 403,
+      }
+    );
   }
 
   // Validar token
-  const { valid: isValid, payload } = await validateToken(token);
+  const { error, status } = await validateToken(token);
 
-  console.log(isValid);
-
-  if (!isValid) {
-    return NextResponse.json({
-      status: 403,
-      message: "Invalid Auth token",
-    } as BaseResponse);
+  if (error) {
+    return NextResponse.json(
+      {
+        message: error,
+      } as BaseResponse,
+      {
+        status: status,
+      }
+    );
   }
 
   return NextResponse.next();
