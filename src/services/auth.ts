@@ -42,6 +42,7 @@ export async function registerUser({
       phone_number: user.phone_number,
       uuid: user.uuid,
       organization_id: user.organization_id,
+      role: user.role,
     },
   ]);
 
