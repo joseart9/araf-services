@@ -23,8 +23,6 @@ export async function registerUser({
     user.email
   );
 
-  console.log(isRegistered, isRegisteredError);
-
   if (isRegistered) {
     return { error: "This user already has an account", status: 400 };
   }

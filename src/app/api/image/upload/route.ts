@@ -11,8 +11,6 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File;
     const projectID = formData.get("project_id") as string;
 
-    console.log(file);
-
     if (!file) {
       return NextResponse.json(
         {

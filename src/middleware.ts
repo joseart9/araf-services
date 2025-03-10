@@ -7,19 +7,19 @@ export const config = {
   matcher: "/api/:path*",
 };
 
+const UNPROTECTED_ROUTES = ["/api/auth/login", "/api/auth/register"];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Omitir validación en rutas /api/auth
-  if (pathname.startsWith("/api/auth")) {
+  // Omitir validación en rutas no protegidas
+  if (UNPROTECTED_ROUTES.includes(pathname)) {
     return NextResponse.next();
   }
 
   const authHeader = request.headers.get("authorization");
   // Buscar token en cookies
   let token = authHeader?.substring(7);
-
-  console.log(token);
 
   if (!token) {
     return NextResponse.json(
