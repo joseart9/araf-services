@@ -84,8 +84,8 @@ export default function AboutUs() {
                     {values.map((value, index) => (
                         <motion.div
                             key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
+                            initial={{ y: 20 }}
+                            whileInView={{ y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
                             className="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
