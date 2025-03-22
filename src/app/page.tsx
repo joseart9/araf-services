@@ -5,6 +5,7 @@ import Contact from "./components/contact";
 import CallToAction from "./components/call-to-action";
 import Testimonials from "./components/testimonials";
 import Footer from "./components/footer";
+import Nav from "./components/nav";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -49,28 +50,31 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main>
-      <section id="home">
-        <Hero />
-      </section>
-      <section id="services">
-        <Services />
-      </section>
-      <section id="call-to-action">
-        <CallToAction />
-      </section>
-      <section id="about">
-        <AboutUs />
-      </section>
-      <section id="testimonials">
-        <Testimonials />
-      </section>
-      <section id="contact">
-        <Contact />
-      </section>
-      <section id="footer">
-        <Footer />
-      </section>
-    </main>
+    <>
+      <Nav />
+      <main>
+        <section id="home">
+          <Hero />
+        </section>
+        <section id="services">
+          <Services />
+        </section>
+        <section id="call-to-action">
+          <CallToAction />
+        </section>
+        <section id="about">
+          <AboutUs />
+        </section>
+        <section id="testimonials">
+          <Testimonials />
+        </section>
+        <section id="contact">
+          <Contact />
+        </section>
+        <section id="footer">
+          <Footer />
+        </section>
+      </main>
+    </>
   );
 }
