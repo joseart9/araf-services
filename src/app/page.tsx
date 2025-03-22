@@ -52,7 +52,7 @@ export default function Page() {
   return (
     <>
       <Nav />
-      <main>
+      <main className="overflow-x-hidden">
         <section id="home">
           <Hero />
         </section>
