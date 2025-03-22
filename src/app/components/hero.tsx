@@ -42,20 +42,20 @@ export default function Hero() {
                         </motion.p>
 
                         <motion.div
-                            className="flex gap-4"
+                            className="flex gap-3"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                         >
                             <a
                                 href="#contact"
-                                className="bg-yellow-400 text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-yellow-300 transition-colors"
+                                className="bg-yellow-400 text-blue-900 px-6 py-3 rounded-full font-semibold hover:bg-yellow-300 transition-colors text-sm md:text-base"
                             >
                                 Contáctanos
                             </a>
                             <a
                                 href="#services"
-                                className="border-2 border-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors"
+                                className="border-2 border-white px-6 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors text-sm md:text-base"
                             >
                                 Nuestros Servicios
                             </a>
@@ -67,7 +67,7 @@ export default function Hero() {
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="relative"
+                        className="relative hidden lg:block"
                     >
                         <div className="relative w-full aspect-square">
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full blur-3xl opacity-20 animate-pulse" />
