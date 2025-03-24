@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     };
 
     // Generate a JWT token
-    const token = jwt.sign({ ...userSession }, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ ...userSession }, SECRET_KEY, { expiresIn: "7d" });
 
     return NextResponse.json(
       {
