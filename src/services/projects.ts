@@ -21,6 +21,11 @@ export async function createProjectService({
   // Generate a new UUID
   const uuid = uuidv4();
 
+  // Default config
+  const admin_url = project.public_url + "/admin";
+  const has_custom_domain = false;
+  const isActive = true;
+
   // Create a new project
   const { data, error } = await db
     .from("projects")
@@ -28,6 +33,9 @@ export async function createProjectService({
       {
         ...project,
         uuid,
+        admin_url,
+        has_custom_domain,
+        isActive,
       },
     ])
     .select("*")
