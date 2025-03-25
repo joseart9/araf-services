@@ -1,4 +1,4 @@
-export default interface Project {
+interface Project {
   id: string;
   uuid: string;
   name: string;

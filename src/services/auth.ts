@@ -2,8 +2,6 @@
 
 import { createClient } from "@/utils/supabase/middleware";
 import bcrypt from "bcrypt";
-import User from "@/types/User";
-import UserSession from "@/types/UserSession";
 import BaseRequest from "@/types/BaseRequest";
 
 interface RegisterUserProps extends BaseRequest {
@@ -150,7 +148,6 @@ export async function getUserSession({
   // Return the user session
   return {
     userSession: {
-      userID: data.id,
       email: data.email,
       uuid: data.uuid,
       role: data.role,

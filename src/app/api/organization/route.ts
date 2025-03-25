@@ -33,10 +33,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { data, error, status } = await getUserOrganizations(
-      req,
-      user.userID
-    );
+    const { data, error, status } = await getUserOrganizations(req, user.uuid);
 
     if (error) {
       return NextResponse.json(

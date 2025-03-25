@@ -7,7 +7,13 @@ export const config = {
   matcher: "/api/:path*",
 };
 
-const UNPROTECTED_ROUTES = ["/api/auth/login", "/api/auth/register"];
+const UNPROTECTED_ROUTES = [
+  "/api/auth/login",
+  "/api/auth/login/:projectId*",
+  "/api/auth/logout",
+  "/api/auth/register",
+  "/api/auth/validate",
+];
 
 // Add your allowed origins here
 const ALLOWED_ORIGINS = [
@@ -37,8 +43,20 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  console.log(pathname);
+
+  // Check if the pathname matches any unprotected route pattern
+  const isUnprotectedRoute = UNPROTECTED_ROUTES.some((route) => {
+    if (route.includes(":projectId")) {
+      // Convert the route pattern to a regex
+      const pattern = route.replace(":projectId*", "[^/]+");
+      return new RegExp(`^${pattern}$`).test(pathname);
+    }
+    return pathname === route;
+  });
+
   // Omitir validación en rutas no protegidas
-  if (UNPROTECTED_ROUTES.includes(pathname)) {
+  if (isUnprotectedRoute) {
     const response = NextResponse.next();
     if (ALLOWED_ORIGINS.includes(origin)) {
       response.headers.set("Access-Control-Allow-Origin", origin);
