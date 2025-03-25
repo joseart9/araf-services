@@ -7,7 +7,10 @@ import { getUser } from "@/services/auth";
 import UserSession from "@/types/UserSession";
 import { ROLES } from "@/const/roles";
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { uuid: string } }
+) {
   const SECRET_KEY = process.env.JWT_SECRET;
 
   if (!SECRET_KEY) {
@@ -47,12 +50,17 @@ export async function POST(req: NextRequest) {
         { status: status }
       );
     }
-
-    // If user is not admin return error
+    // If the user is admin bypass the organization check
     if (user.role !== ROLES.ADMIN) {
-      return NextResponse.json({ message: "Unauthorized" } as BaseResponse, {
-        status: 401,
-      });
+      // If user is not part of the organization return error
+      if (user.organization_id !== params.uuid) {
+        return NextResponse.json(
+          { message: "Not authorized for this organization" } as BaseResponse,
+          {
+            status: 401,
+          }
+        );
+      }
     }
 
     // Create a user session for JWT

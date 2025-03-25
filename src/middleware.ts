@@ -7,7 +7,11 @@ export const config = {
   matcher: "/api/:path*",
 };
 
-const UNPROTECTED_ROUTES = ["/api/auth/login", "/api/auth/register"];
+const UNPROTECTED_ROUTES = [
+  "/api/auth/login",
+  "/api/auth/register",
+  "/api/auth/validate",
+];
 
 // Add your allowed origins here
 const ALLOWED_ORIGINS = [

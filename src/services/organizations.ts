@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export async function getUserOrganizations(
   req: NextRequest,
-  id: string
+  uuid: string
 ): Promise<{
   data?: any;
   error?: string;
@@ -26,7 +26,7 @@ export async function getUserOrganizations(
     )
   `
     )
-    .eq("id", id)
+    .eq("uuid", uuid)
     .single();
 
   if (error) {
