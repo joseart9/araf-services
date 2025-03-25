@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 import BaseResponse from "@/types/BaseResponse";
 import jwt from "jsonwebtoken";
 import { getUser } from "@/services/auth";
-import UserSession from "@/types/UserSession";
 import { ROLES } from "@/const/roles";
 
 export async function POST(req: NextRequest) {
@@ -48,11 +47,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // If user is not admin return error
+    // If the user is not admin return error
     if (user.role !== ROLES.ADMIN) {
-      return NextResponse.json({ message: "Unauthorized" } as BaseResponse, {
-        status: 401,
-      });
+      return NextResponse.json(
+        { message: "Not authorized for this organization" } as BaseResponse,
+        { status: 401 }
+      );
     }
 
     // Create a user session for JWT

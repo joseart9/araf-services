@@ -1,4 +1,4 @@
-export default interface UserSession {
+interface UserSession {
   email: string;
   uuid: string;
   role?: string;

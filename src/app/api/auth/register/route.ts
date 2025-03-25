@@ -5,7 +5,6 @@ import { registerUser } from "@/services/auth";
 import BaseResponse from "@/types/BaseResponse";
 import { v4 as uuidv4 } from "uuid";
 import validateUser from "./utils";
-import User from "@/types/User";
 import { ROLES } from "@/const/roles";
 
 export async function POST(req: NextRequest) {

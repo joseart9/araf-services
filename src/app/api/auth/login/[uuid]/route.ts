@@ -4,12 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 import BaseResponse from "@/types/BaseResponse";
 import jwt from "jsonwebtoken";
 import { getUser } from "@/services/auth";
-import UserSession from "@/types/UserSession";
 import { ROLES } from "@/const/roles";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { uuid: string } }
+  { params }: { params: Promise<{ uuid: string }> }
 ) {
   const SECRET_KEY = process.env.JWT_SECRET;
 
@@ -53,7 +52,7 @@ export async function POST(
     // If the user is admin bypass the organization check
     if (user.role !== ROLES.ADMIN) {
       // If user is not part of the organization return error
-      if (user.organization_id !== params.uuid) {
+      if (user.organization_id !== (await params).uuid) {
         return NextResponse.json(
           { message: "Not authorized for this organization" } as BaseResponse,
           {

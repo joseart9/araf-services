@@ -1,5 +1,3 @@
-import User from "@/types/User";
-
 export default function validateUser(user: User): { error: string | null } {
   // Validate email
   if (!user.email) {

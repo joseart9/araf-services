@@ -1,5 +1,3 @@
-import Project from "@/types/Project";
-
 export function validateProject(project: Partial<Project>): {
   error: string | null;
 } {

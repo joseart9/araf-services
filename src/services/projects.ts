@@ -1,5 +1,4 @@
 import BaseRequest from "@/types/BaseRequest";
-import Project from "@/types/Project";
 import { createClient } from "@/utils/supabase/middleware";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";

@@ -1,4 +1,3 @@
-import UserSession from "@/types/UserSession";
 import { jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 
