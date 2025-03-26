@@ -36,7 +36,7 @@ export default function Footer() {
                 <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                     <div className="space-y-8 xl:col-span-1">
                         <Link href="/" className="flex items-center space-x-3">
-                            <span className="text-2xl font-bold text-white">Araf Innovations</span>
+                            <span className="text-2xl font-bold text-white">ARAF INNOVATIONS</span>
                         </Link>
                         <p className="text-gray-400 text-base leading-relaxed">
                             Transformando ideas en soluciones digitales innovadoras. Impulsamos el crecimiento de tu negocio con tecnología de vanguardia.
@@ -115,13 +115,13 @@ export default function Footer() {
                                 </h3>
                                 <div className="mt-4 space-y-4">
                                     <p className="text-base text-gray-400">
-                                        Email: contacto@arafinnovations.com
+                                        Email: support@arafinnovations.com
                                     </p>
                                     <p className="text-base text-gray-400">
-                                        Tel: +52 (123) 456-7890
+                                        Tel: +52 (811) 785-8904
                                     </p>
                                     <p className="text-base text-gray-400">
-                                        Ciudad de México, México
+                                        Monterrey, Nuevo León, México
                                     </p>
                                 </div>
                             </div>

@@ -75,7 +75,7 @@ export default function Contact() {
                                     onChange={handleChange}
                                     required
                                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                                    placeholder="Tu nombre"
+                                    placeholder="Nombre"
                                 />
                             </div>
 
@@ -91,7 +91,7 @@ export default function Contact() {
                                     onChange={handleChange}
                                     required
                                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                                    placeholder="Tu email"
+                                    placeholder="Email"
                                 />
                             </div>
 
@@ -107,7 +107,7 @@ export default function Contact() {
                                     required
                                     rows={4}
                                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none"
-                                    placeholder="Tu mensaje"
+                                    placeholder="Mensaje"
                                 />
                             </div>
 
@@ -140,7 +140,7 @@ export default function Contact() {
                                     </div>
                                     <div>
                                         <h4 className="text-lg font-semibold text-gray-900">Email</h4>
-                                        <p className="text-gray-600">soporte@arafinnovations.com</p>
+                                        <p className="text-gray-600">support@arafinnovations.com</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start space-x-4">
