@@ -1,12 +1,11 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 const testimonials = [
     {
-        name: "Carlos Rodríguez",
-        role: "CEO, TechVision",
+        name: "Marcela Villareal",
+        role: "MatsanMX",
         image: "https://imxdhdqvbpzxypvwfnbp.supabase.co/storage/v1/object/public/images/ADMIN/9ffd91b4-092e-4c43-9a62-d154cca36c75.webp",
         text: "ARAF Services transformó completamente nuestra presencia digital. Su equipo es excepcional y los resultados superaron nuestras expectativas."
     },

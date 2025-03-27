@@ -14,7 +14,6 @@ const navigation = {
         { name: 'Sobre Nosotros', href: '/about' },
         { name: 'Proyectos', href: '/proyectos' },
         { name: 'Blog', href: '/blog' },
-        { name: 'Carreras', href: '/carreras' },
     ],
     legal: [
         { name: 'Política de Privacidad', href: '/privacidad' },
