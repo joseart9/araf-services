@@ -5,9 +5,9 @@ import { Presentation } from "./Presentation/presentation";
 export default async function Onboarding({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: any;
 }) {
-  const { token, projectId } = searchParams;
+  const { token, projectId } = await searchParams;
 
   if (!token) {
     return (

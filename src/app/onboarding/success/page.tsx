@@ -2,16 +2,13 @@
 
 import { motion } from "framer-motion";
 import { CheckCircle2, Rocket, Sparkles, ArrowRight } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CustomButton as Button } from "@/app/components/araf-components/Button";
 import { LogoButton } from "@/app/login/logo-button";
 
 export default function Success() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const organizationId = searchParams.get("organizationId");
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
@@ -167,9 +164,7 @@ export default function Success() {
 
             <motion.div variants={itemVariants}>
               <Button
-                onClick={() =>
-                  router.push(`/dashboard?organizationId=${organizationId}`)
-                }
+                onClick={() => router.push(`/dashboard`)}
                 className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Ir al Dashboard
