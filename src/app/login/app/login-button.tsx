@@ -19,25 +19,19 @@ export function LoginButton({
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 17,
-        delay: 4,
-      }}
-      className="w-full"
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
       <Button
         onClick={onClick}
         disabled={isLoading}
-        className={`relative overflow-hidden group ${className} mt-4 bg-blue-800 hover:bg-blue-900`}
+        className={`relative overflow-hidden group ${className}`}
         size="lg"
       >
         <motion.div
           className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/0"
           initial={{ x: "-100%" }}
           whileHover={{ x: "100%" }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
         />
 
         <motion.div
@@ -48,7 +42,7 @@ export function LoginButton({
         >
           <LogIn className="w-5 h-5" />
           <span className="font-semibold">
-            {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
+            {isLoading ? "Signing in..." : "Sign in"}
           </span>
         </motion.div>
 

@@ -11,7 +11,6 @@ const UNPROTECTED_ROUTES = [
   "/api/auth/login",
   "/api/auth/login/:projectId*",
   "/api/auth/logout",
-  "/api/auth/register",
   "/api/auth/validate",
 ];
 
