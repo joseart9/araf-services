@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/app/components/araf-components/Input";
 import {
   Card,
@@ -12,35 +11,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
 import { login } from "../services/login";
 import { useRouter } from "next/navigation";
 import { LoginButton } from "../login-button";
 import { Mail, Lock } from "lucide-react";
+import { motion } from "framer-motion";
 
 const formSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().email("Correo electrónico inválido"),
+  password: z.string().min(1, "Contraseña requerida"),
 });
 
-export function LoginForm({
-  project,
-  redirectUrl,
-  organization,
-}: {
-  project: string;
-  redirectUrl: string;
-  organization: Organization;
-}) {
+export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -53,22 +38,15 @@ export function LoginForm({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!project) {
-      setError("Project ID is required");
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await login(values.email, values.password, project);
+      const response = await login(values.email, values.password);
 
       if (response.data?.token) {
         // Redirect back to login page with token
-        router.push(
-          `/login?project=${project}&redirect=${redirectUrl}&token=${response.data.token}`
-        );
+        router.push(`/user`);
       } else {
         setError(response.message || "Login failed");
       }
@@ -80,70 +58,115 @@ export function LoginForm({
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">
-          {organization.name}
-        </CardTitle>
-        <CardDescription className="text-center">
-          Enter your credentials to access your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.5,
+        ease: "easeOut",
+      }}
+      className="w-full flex justify-center items-center h-full"
+    >
+      <Card className="w-full max-w-lg">
+        <CardHeader className="mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <CardTitle className="text-2xl font-bold text-center text-blue-800">
+              Araf Innovations
+            </CardTitle>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            <CardDescription className="text-center">
+              Ingrese sus credenciales para acceder a su cuenta
+            </CardDescription>
+          </motion.div>
+        </CardHeader>
+        <CardContent>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Alert variant="destructive" className="mb-6">
+                      <AlertDescription className="text-sm font-medium">
+                        {error}
+                      </AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      icon={Mail}
-                      label="Email"
-                      error={form.formState.errors.email?.message}
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem
+                      className={form.formState.errors.email ? "mb-6" : "mb-4"}
+                    >
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="Correo electrónico"
+                          icon={Mail}
+                          label="Correo electrónico"
+                          error={form.formState.errors.email?.message}
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      icon={Lock}
-                      label="Password"
-                      error={form.formState.errors.password?.message}
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem
+                      className={
+                        form.formState.errors.password ? "mb-6" : "mb-4"
+                      }
+                    >
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Contraseña"
+                          icon={Lock}
+                          label="Contraseña"
+                          error={form.formState.errors.password?.message}
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
-            <LoginButton
-              isLoading={isLoading}
-              onClick={form.handleSubmit(onSubmit)}
-              className="w-full"
-            />
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+                <LoginButton
+                  isLoading={isLoading}
+                  onClick={form.handleSubmit(onSubmit)}
+                  className="w-full"
+                />
+              </form>
+            </Form>
+          </motion.div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

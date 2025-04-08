@@ -11,4 +11,7 @@ interface Project {
   custom_domain_url?: string;
   isActive: boolean;
   type?: string;
+  login_url?: string;
+  created_at?: string;
+  updated_at?: string;
 }

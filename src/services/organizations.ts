@@ -42,7 +42,8 @@ export async function getUserOrganizations(
 
 export async function createOrganization(
   req: NextRequest,
-  name: string
+  name: string,
+  description: string
 ): Promise<{
   data?: any;
   error?: string;
@@ -57,7 +58,7 @@ export async function createOrganization(
   // Insert the new organization
   const { data, error } = await db
     .from("organizations")
-    .insert({ name, uuid })
+    .insert({ name, uuid, description })
     .select("*")
     .single();
 

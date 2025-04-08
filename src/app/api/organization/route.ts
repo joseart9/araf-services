@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
 // Create a new organization
 export async function POST(req: NextRequest) {
   // Get the request body
-  const { name } = await req.json();
+  const { name, description } = await req.json();
 
   // Check if the name is provided
   if (!name) {
@@ -82,7 +82,11 @@ export async function POST(req: NextRequest) {
   }
 
   // Create the organization
-  const { data, error, status } = await createOrganization(req, name);
+  const { data, error, status } = await createOrganization(
+    req,
+    name,
+    description
+  );
 
   if (error) {
     return NextResponse.json(

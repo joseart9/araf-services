@@ -7,10 +7,11 @@ interface LoginResponse {
 
 export async function login(
   email: string,
-  password: string
+  password: string,
+  projectId: string
 ): Promise<LoginResponse> {
   try {
-    const response = await fetch(`/api/auth/login`, {
+    const response = await fetch(`/api/auth/login/${projectId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
