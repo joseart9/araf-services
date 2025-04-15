@@ -59,7 +59,7 @@ export function LoginForm({
       if (response.data?.token) {
         // Redirect back to login page with token
         router.push(
-          `/login?project=${project}&redirect=${redirectUrl}&token=${response.data.token}`
+          `/login/app?project=${project}&redirect=${redirectUrl}&token=${response.data.token}`
         );
       } else {
         setError(response.message || "Login failed");

@@ -10,6 +10,8 @@ export default async function LoginPage({
   const { project, redirect: redirectUrl, token } = await searchParams;
   const { organization, error } = await getOrganization(project);
 
+  console.log(project, redirectUrl, token);
+
   if (error) {
     return <div>Error: {error}</div>;
   }
