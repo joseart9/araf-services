@@ -18,6 +18,7 @@ const UNPROTECTED_ROUTES = [
 const ALLOWED_ORIGINS = [
   "https://arafinnovations.com",
   "http://localhost:3000",
+  "https://arafinnovations.com/api/image/upload",
   // Add other allowed origins as needed
 ];
 
