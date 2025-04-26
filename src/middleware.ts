@@ -12,6 +12,7 @@ const UNPROTECTED_ROUTES = [
   "/api/auth/login/:projectId*",
   "/api/auth/logout",
   "/api/auth/validate",
+  "/api/image/upload",
 ];
 
 // Add your allowed origins here
@@ -19,6 +20,7 @@ const ALLOWED_ORIGINS = [
   "https://arafinnovations.com",
   "http://localhost:3000",
   // Add other allowed origins as needed
+  "https://goat-boots.vercel.app",
 ];
 
 export async function middleware(request: NextRequest) {

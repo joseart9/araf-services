@@ -19,6 +19,7 @@ export async function OPTIONS(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const origin = req.headers.get("origin") || "";
   try {
     // Procesamos el formulario multipart/form-data
     const formData = await req.formData();
@@ -32,6 +33,10 @@ export async function POST(req: NextRequest) {
         } as BaseResponse,
         {
           status: 400,
+          headers: {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+          },
         }
       );
     }
@@ -43,6 +48,10 @@ export async function POST(req: NextRequest) {
         } as BaseResponse,
         {
           status: 400,
+          headers: {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+          },
         }
       );
     }
@@ -60,6 +69,10 @@ export async function POST(req: NextRequest) {
         } as BaseResponse,
         {
           status: 400,
+          headers: {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+          },
         }
       );
     }
@@ -71,6 +84,10 @@ export async function POST(req: NextRequest) {
       } as BaseResponse,
       {
         status: status,
+        headers: {
+          "Access-Control-Allow-Origin": origin,
+          "Access-Control-Allow-Credentials": "true",
+        },
       }
     );
   } catch (error) {
@@ -80,6 +97,10 @@ export async function POST(req: NextRequest) {
       } as BaseResponse,
       {
         status: 500,
+        headers: {
+          "Access-Control-Allow-Origin": origin,
+          "Access-Control-Allow-Credentials": "true",
+        },
       }
     );
   }
