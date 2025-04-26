@@ -5,12 +5,14 @@ import BaseResponse from "@/types/BaseResponse";
 import { uploadImage } from "@/services";
 
 export async function OPTIONS(req: NextRequest) {
+  const origin = req.headers.get("origin") || "";
   return new NextResponse(null, {
     status: 200,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": origin,
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Credentials": "true",
       "Access-Control-Max-Age": "86400",
     },
   });
